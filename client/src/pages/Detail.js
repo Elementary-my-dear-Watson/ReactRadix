@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-
+import { useDispatch, useSelector } from 'react-redux';
 import Cart from '../components/Cart';
-import { useStoreContext } from '../utils/GlobalState';
+// import { useStoreContext } from '../utils/GlobalState';
 import {
   REMOVE_FROM_CART,
   UPDATE_CART_QUANTITY,
@@ -15,22 +15,21 @@ import { idbPromise } from '../utils/helpers';
 import spinner from '../assets/spinner.gif';
 
 function Detail() {
-  const [state, dispatch] = useStoreContext();
+  // const [state, dispatch] = useStoreContext();
+  const dispatch = useDispatch();
   const { id } = useParams();
 
   const [currentProduct, setCurrentProduct] = useState({});
 
   const { loading, data } = useQuery(QUERY_PRODUCTS);
-
+  const state = useSelector((state) => state);
   const { products, cart } = state;
 
+
   useEffect(() => {
-    // already in global store
     if (products.length) {
       setCurrentProduct(products.find((product) => product._id === id));
-    }
-    // retrieved from server
-    else if (data) {
+    } else if (data) {
       dispatch({
         type: UPDATE_PRODUCTS,
         products: data.products,
@@ -39,9 +38,7 @@ function Detail() {
       data.products.forEach((product) => {
         idbPromise('products', 'put', product);
       });
-    }
-    // get cache from idb
-    else if (!loading) {
+    } else if (!loading) {
       idbPromise('products', 'get').then((indexedProducts) => {
         dispatch({
           type: UPDATE_PRODUCTS,
@@ -49,7 +46,7 @@ function Detail() {
         });
       });
     }
-  }, [products, data, loading, dispatch, id]);
+  }, [products, data, loading, id, dispatch]); // Added dispatch
 
   const addToCart = () => {
     const itemInCart = cart.find((cartItem) => cartItem._id === id);
