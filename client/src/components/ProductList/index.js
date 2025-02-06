@@ -13,7 +13,7 @@ function ProductList() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
-  const { currentCategory } = state;
+  // const { currentCategory } = state;
 
   const { loading, data } = useQuery(QUERY_PRODUCTS);
 
@@ -37,19 +37,19 @@ function ProductList() {
   }, [data, loading, dispatch]);
 
   function filterProducts() {
-    if (!currentCategory) {
+    if (!state.currentCategory) {
       return state.products;
     }
 
     return state.products.filter(
-      (product) => product.category._id === currentCategory
+      (product) => product.category._id === state.currentCategory
     );
   }
 
   return (
     <div className="my-2">
       <h2>Our Products:</h2>
-      {state.products.length ? (
+      {state?.products && (state.products.length ? (
         <div className="flex-row">
           {filterProducts().map((product) => (
             <ProductItem
@@ -64,7 +64,7 @@ function ProductList() {
         </div>
       ) : (
         <h3>You haven't added any products yet!</h3>
-      )}
+      ))}
       {loading ? <img src={spinner} alt="loading" /> : null}
     </div>
   );

@@ -1,4 +1,3 @@
-
 import {
   UPDATE_PRODUCTS,
   ADD_TO_CART,
@@ -20,17 +19,25 @@ export const reducer = (state, action) => {
       };
 
     case ADD_TO_CART:
-      return {
-        ...state,
-        cartOpen: true,
-        cart: [...state.cart, action.product],
-      };
+      console.log("state.cart: ", action);
+      // if (state?.cart) {
+        return {
+          ...state,
+          cartOpen: true,
+          cart: [...(state?.cart ? state.cart : []), action.products],
+        };
+      // };
+      // return {...state};
 
     case ADD_MULTIPLE_TO_CART:
+      // console.log("state.cart: ", state?.cart);
+      if (state?.cart) {
       return {
         ...state,
         cart: [...state.cart, ...action.products],
       };
+    };
+    return {...state};
 
     case UPDATE_CART_QUANTITY:
       return {

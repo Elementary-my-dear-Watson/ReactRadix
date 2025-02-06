@@ -14,7 +14,7 @@ function CategoryMenu() {
   const dispatch = useDispatch();
   const state = useSelector((state) => state);
 
-  const { categories } = state;
+  // const { categories } = state;
 
   const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES);
 
@@ -47,7 +47,7 @@ function CategoryMenu() {
   return (
     <div>
       <h2>Choose a Category:</h2>
-      {categories.map((item) => (
+      {state?.categories && state.categories.map((item) => (
         <button
           key={item._id}
           onClick={() => {

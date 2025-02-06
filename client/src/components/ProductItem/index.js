@@ -19,10 +19,10 @@ function ProductItem(item) {
     quantity
   } = item;
 
-  const { cart } = state
+  // const { cart } = state
 
   const addToCart = () => {
-    const itemInCart = cart.find((cartItem) => cartItem._id === _id)
+    const itemInCart = state?.cart?.find((cartItem) => cartItem._id === _id)
     if (itemInCart) {
       dispatch({
         type: UPDATE_CART_QUANTITY,
@@ -34,9 +34,11 @@ function ProductItem(item) {
         purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1
       });
     } else {
+      console.log("itemInCart: ", itemInCart);
+      console.log("item: ", item);
       dispatch({
         type: ADD_TO_CART,
-        product: { ...item, purchaseQuantity: 1 }
+        products: { ...item, purchaseQuantity: 1 }
       });
       idbPromise('cart', 'put', { ...item, purchaseQuantity: 1 });
     }
